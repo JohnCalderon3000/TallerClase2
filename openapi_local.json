@@ -1,0 +1,439 @@
+﻿{
+    "openapi":  "3.1.0",
+    "info":  {
+                 "title":  "API Test Cases - Clase 2",
+                 "description":  "API REST para ejecutar test cases de Bureau, PrÃ©stamos y Transferencias",
+                 "version":  "1.0.0"
+             },
+    "paths":  {
+                  "/api/bureau/consultar":  {
+                                                "post":  {
+                                                             "tags":  [
+                                                                          "Bureau de CrÃ©dito"
+                                                                      ],
+                                                             "summary":  "Consultar Bureau",
+                                                             "description":  "Consulta el score y historial crediticio de un cliente.\n\n**Test Cases cubiertos:**\n- â\u0085 Path feliz: Cliente con historial â Score + detalles\n- â ï¸ Sin historial: Cliente nuevo â score=0\n- â Cliente bloqueado â Error 403\n- â ï¸ LÃ­mite consultas: \u003e1 en 24h â Error 429",
+                                                             "operationId":  "consultar_bureau_api_bureau_consultar_post",
+                                                             "requestBody":  {
+                                                                                 "content":  {
+                                                                                                 "application/json":  {
+                                                                                                                          "schema":  {
+                                                                                                                                         "$ref":  "#/components/schemas/BureauRequest"
+                                                                                                                                     }
+                                                                                                                      }
+                                                                                             },
+                                                                                 "required":  true
+                                                                             },
+                                                             "responses":  {
+                                                                               "200":  {
+                                                                                           "description":  "Successful Response",
+                                                                                           "content":  {
+                                                                                                           "application/json":  {
+                                                                                                                                    "schema":  {
+                                                                                                                                                   "$ref":  "#/components/schemas/BureauResponse"
+                                                                                                                                               }
+                                                                                                                                }
+                                                                                                       }
+                                                                                       },
+                                                                               "422":  {
+                                                                                           "description":  "Validation Error",
+                                                                                           "content":  {
+                                                                                                           "application/json":  {
+                                                                                                                                    "schema":  {
+                                                                                                                                                   "$ref":  "#/components/schemas/HTTPValidationError"
+                                                                                                                                               }
+                                                                                                                                }
+                                                                                                       }
+                                                                                       }
+                                                                           }
+                                                         }
+                                            },
+                  "/api/bureau/{cliente_id}":  {
+                                                   "get":  {
+                                                               "tags":  [
+                                                                            "Bureau de CrÃ©dito"
+                                                                        ],
+                                                               "summary":  "Obtener Ultima Consulta",
+                                                               "description":  "Obtiene la Ãºltima consulta guardada (mock para demo)",
+                                                               "operationId":  "obtener_ultima_consulta_api_bureau__cliente_id__get",
+                                                               "parameters":  [
+                                                                                  {
+                                                                                      "name":  "cliente_id",
+                                                                                      "in":  "path",
+                                                                                      "required":  true,
+                                                                                      "schema":  {
+                                                                                                     "type":  "integer",
+                                                                                                     "title":  "Cliente Id"
+                                                                                                 }
+                                                                                  }
+                                                                              ],
+                                                               "responses":  {
+                                                                                 "200":  {
+                                                                                             "description":  "Successful Response",
+                                                                                             "content":  {
+                                                                                                             "application/json":  {
+                                                                                                                                      "schema":  {
+                                                                                                                                                     "$ref":  "#/components/schemas/BureauResponse"
+                                                                                                                                                 }
+                                                                                                                                  }
+                                                                                                         }
+                                                                                         },
+                                                                                 "422":  {
+                                                                                             "description":  "Validation Error",
+                                                                                             "content":  {
+                                                                                                             "application/json":  {
+                                                                                                                                      "schema":  {
+                                                                                                                                                     "$ref":  "#/components/schemas/HTTPValidationError"
+                                                                                                                                                 }
+                                                                                                                                  }
+                                                                                                         }
+                                                                                         }
+                                                                             }
+                                                           }
+                                               },
+                  "/api/prestamos/solicitar":  {
+                                                   "post":  {
+                                                                "tags":  [
+                                                                             "PrÃ©stamos"
+                                                                         ],
+                                                                "summary":  "Solicitar Prestamo",
+                                                                "description":  "Crea solicitud de prÃ©stamo con aprobaciÃ³n automÃ¡tica/manual/rechazo.\n\n**Test Cases cubiertos:**\n- â\u0085 AprobaciÃ³n automÃ¡tica: score\u003e700, ingresos 4x cuota\n- â ï¸ AnÃ¡lisis manual: score 600-700, ingresos 3x cuota\n- â Rechazo: score\u003c500 o ingresos insuficientes\n- â LÃ­mite monto: \u003e$50M â Error validaciÃ³n",
+                                                                "operationId":  "solicitar_prestamo_api_prestamos_solicitar_post",
+                                                                "requestBody":  {
+                                                                                    "content":  {
+                                                                                                    "application/json":  {
+                                                                                                                             "schema":  {
+                                                                                                                                            "$ref":  "#/components/schemas/PrestamoRequest"
+                                                                                                                                        }
+                                                                                                                         }
+                                                                                                },
+                                                                                    "required":  true
+                                                                                },
+                                                                "responses":  {
+                                                                                  "200":  {
+                                                                                              "description":  "Successful Response",
+                                                                                              "content":  {
+                                                                                                              "application/json":  {
+                                                                                                                                       "schema":  {
+                                                                                                                                                      "$ref":  "#/components/schemas/PrestamoResponse"
+                                                                                                                                                  }
+                                                                                                                                   }
+                                                                                                          }
+                                                                                          },
+                                                                                  "422":  {
+                                                                                              "description":  "Validation Error",
+                                                                                              "content":  {
+                                                                                                              "application/json":  {
+                                                                                                                                       "schema":  {
+                                                                                                                                                      "$ref":  "#/components/schemas/HTTPValidationError"
+                                                                                                                                                  }
+                                                                                                                                   }
+                                                                                                          }
+                                                                                          }
+                                                                              }
+                                                            }
+                                               },
+                  "/api/prestamos/{prestamo_id}/estado":  {
+                                                              "get":  {
+                                                                          "tags":  [
+                                                                                       "PrÃ©stamos"
+                                                                                   ],
+                                                                          "summary":  "Obtener Estado Prestamo",
+                                                                          "description":  "Consulta estado actual de un prÃ©stamo",
+                                                                          "operationId":  "obtener_estado_prestamo_api_prestamos__prestamo_id__estado_get",
+                                                                          "parameters":  [
+                                                                                             {
+                                                                                                 "name":  "prestamo_id",
+                                                                                                 "in":  "path",
+                                                                                                 "required":  true,
+                                                                                                 "schema":  {
+                                                                                                                "type":  "integer",
+                                                                                                                "title":  "Prestamo Id"
+                                                                                                            }
+                                                                                             }
+                                                                                         ],
+                                                                          "responses":  {
+                                                                                            "200":  {
+                                                                                                        "description":  "Successful Response",
+                                                                                                        "content":  {
+                                                                                                                        "application/json":  {
+                                                                                                                                                 "schema":  {
+                                                                                                                                                                "$ref":  "#/components/schemas/PrestamoResponse"
+                                                                                                                                                            }
+                                                                                                                                             }
+                                                                                                                    }
+                                                                                                    },
+                                                                                            "422":  {
+                                                                                                        "description":  "Validation Error",
+                                                                                                        "content":  {
+                                                                                                                        "application/json":  {
+                                                                                                                                                 "schema":  {
+                                                                                                                                                                "$ref":  "#/components/schemas/HTTPValidationError"
+                                                                                                                                                            }
+                                                                                                                                             }
+                                                                                                                    }
+                                                                                                    }
+                                                                                        }
+                                                                      }
+                                                          },
+                  "/":  {
+                            "get":  {
+                                        "summary":  "Root",
+                                        "operationId":  "root__get",
+                                        "responses":  {
+                                                          "200":  {
+                                                                      "description":  "Successful Response",
+                                                                      "content":  {
+                                                                                      "application/json":  {
+                                                                                                               "schema":  {
+
+                                                                                                                          }
+                                                                                                           }
+                                                                                  }
+                                                                  }
+                                                      }
+                                    }
+                        },
+                  "/health":  {
+                                  "get":  {
+                                              "summary":  "Health Check",
+                                              "operationId":  "health_check_health_get",
+                                              "responses":  {
+                                                                "200":  {
+                                                                            "description":  "Successful Response",
+                                                                            "content":  {
+                                                                                            "application/json":  {
+                                                                                                                     "schema":  {
+
+                                                                                                                                }
+                                                                                                                 }
+                                                                                        }
+                                                                        }
+                                                            }
+                                          }
+                              }
+              },
+    "components":  {
+                       "schemas":  {
+                                       "BureauRequest":  {
+                                                             "properties":  {
+                                                                                "cliente_id":  {
+                                                                                                   "type":  "integer",
+                                                                                                   "title":  "Cliente Id",
+                                                                                                   "description":  "ID del cliente"
+                                                                                               }
+                                                                            },
+                                                             "type":  "object",
+                                                             "required":  [
+                                                                              "cliente_id"
+                                                                          ],
+                                                             "title":  "BureauRequest"
+                                                         },
+                                       "BureauResponse":  {
+                                                              "properties":  {
+                                                                                 "cliente_id":  {
+                                                                                                    "type":  "integer",
+                                                                                                    "title":  "Cliente Id"
+                                                                                                },
+                                                                                 "score":  {
+                                                                                               "type":  "integer",
+                                                                                               "maximum":  900.0,
+                                                                                               "minimum":  0.0,
+                                                                                               "title":  "Score",
+                                                                                               "description":  "Score crediticio"
+                                                                                           },
+                                                                                 "deudas_activas":  {
+                                                                                                        "type":  "integer",
+                                                                                                        "title":  "Deudas Activas"
+                                                                                                    },
+                                                                                 "monto_deudas":  {
+                                                                                                      "type":  "number",
+                                                                                                      "title":  "Monto Deudas"
+                                                                                                  },
+                                                                                 "puntualidad":  {
+                                                                                                     "type":  "string",
+                                                                                                     "title":  "Puntualidad"
+                                                                                                 },
+                                                                                 "tiene_historial":  {
+                                                                                                         "type":  "boolean",
+                                                                                                         "title":  "Tiene Historial"
+                                                                                                     },
+                                                                                 "fecha_consulta":  {
+                                                                                                        "type":  "string",
+                                                                                                        "title":  "Fecha Consulta"
+                                                                                                    },
+                                                                                 "mensaje":  {
+                                                                                                 "type":  "string",
+                                                                                                 "title":  "Mensaje"
+                                                                                             }
+                                                                             },
+                                                              "type":  "object",
+                                                              "required":  [
+                                                                               "cliente_id",
+                                                                               "score",
+                                                                               "deudas_activas",
+                                                                               "monto_deudas",
+                                                                               "puntualidad",
+                                                                               "tiene_historial",
+                                                                               "fecha_consulta",
+                                                                               "mensaje"
+                                                                           ],
+                                                              "title":  "BureauResponse",
+                                                              "example":  {
+                                                                              "cliente_id":  123,
+                                                                              "deudas_activas":  2,
+                                                                              "fecha_consulta":  "2025-11-25T10:30:00",
+                                                                              "mensaje":  "Cliente apto para crÃ©dito",
+                                                                              "monto_deudas":  5000000.0,
+                                                                              "puntualidad":  "Excelente",
+                                                                              "score":  750,
+                                                                              "tiene_historial":  true
+                                                                          }
+                                                          },
+                                       "HTTPValidationError":  {
+                                                                   "properties":  {
+                                                                                      "detail":  {
+                                                                                                     "items":  {
+                                                                                                                   "$ref":  "#/components/schemas/ValidationError"
+                                                                                                               },
+                                                                                                     "type":  "array",
+                                                                                                     "title":  "Detail"
+                                                                                                 }
+                                                                                  },
+                                                                   "type":  "object",
+                                                                   "title":  "HTTPValidationError"
+                                                               },
+                                       "PrestamoRequest":  {
+                                                               "properties":  {
+                                                                                  "cliente_id":  {
+                                                                                                     "type":  "integer",
+                                                                                                     "title":  "Cliente Id",
+                                                                                                     "description":  "ID del cliente"
+                                                                                                 },
+                                                                                  "monto_solicitado":  {
+                                                                                                           "type":  "number",
+                                                                                                           "maximum":  50000000.0,
+                                                                                                           "exclusiveMinimum":  0.0,
+                                                                                                           "title":  "Monto Solicitado"
+                                                                                                       },
+                                                                                  "plazo_meses":  {
+                                                                                                      "type":  "integer",
+                                                                                                      "maximum":  60.0,
+                                                                                                      "minimum":  12.0,
+                                                                                                      "title":  "Plazo Meses"
+                                                                                                  }
+                                                                              },
+                                                               "type":  "object",
+                                                               "required":  [
+                                                                                "cliente_id",
+                                                                                "monto_solicitado",
+                                                                                "plazo_meses"
+                                                                            ],
+                                                               "title":  "PrestamoRequest"
+                                                           },
+                                       "PrestamoResponse":  {
+                                                                "properties":  {
+                                                                                   "id":  {
+                                                                                              "type":  "integer",
+                                                                                              "title":  "Id"
+                                                                                          },
+                                                                                   "cliente_id":  {
+                                                                                                      "type":  "integer",
+                                                                                                      "title":  "Cliente Id"
+                                                                                                  },
+                                                                                   "monto_solicitado":  {
+                                                                                                            "type":  "number",
+                                                                                                            "title":  "Monto Solicitado"
+                                                                                                        },
+                                                                                   "plazo_meses":  {
+                                                                                                       "type":  "integer",
+                                                                                                       "title":  "Plazo Meses"
+                                                                                                   },
+                                                                                   "cuota_mensual":  {
+                                                                                                         "anyOf":  [
+                                                                                                                       {
+                                                                                                                           "type":  "number"
+                                                                                                                       },
+                                                                                                                       {
+                                                                                                                           "type":  "null"
+                                                                                                                       }
+                                                                                                                   ],
+                                                                                                         "title":  "Cuota Mensual"
+                                                                                                     },
+                                                                                   "estado":  {
+                                                                                                  "type":  "string",
+                                                                                                  "title":  "Estado"
+                                                                                              },
+                                                                                   "motivo_rechazo":  {
+                                                                                                          "anyOf":  [
+                                                                                                                        {
+                                                                                                                            "type":  "string"
+                                                                                                                        },
+                                                                                                                        {
+                                                                                                                            "type":  "null"
+                                                                                                                        }
+                                                                                                                    ],
+                                                                                                          "title":  "Motivo Rechazo"
+                                                                                                      },
+                                                                                   "fecha_solicitud":  {
+                                                                                                           "type":  "string",
+                                                                                                           "format":  "date-time",
+                                                                                                           "title":  "Fecha Solicitud"
+                                                                                                       }
+                                                                               },
+                                                                "type":  "object",
+                                                                "required":  [
+                                                                                 "id",
+                                                                                 "cliente_id",
+                                                                                 "monto_solicitado",
+                                                                                 "plazo_meses",
+                                                                                 "estado",
+                                                                                 "fecha_solicitud"
+                                                                             ],
+                                                                "title":  "PrestamoResponse",
+                                                                "example":  {
+                                                                                "cliente_id":  1,
+                                                                                "cuota_mensual":  483871.0,
+                                                                                "estado":  "aprobado",
+                                                                                "fecha_solicitud":  "2025-11-26T10:30:00",
+                                                                                "id":  1,
+                                                                                "monto_solicitado":  10000000.0,
+                                                                                "plazo_meses":  24
+                                                                            }
+                                                            },
+                                       "ValidationError":  {
+                                                               "properties":  {
+                                                                                  "loc":  {
+                                                                                              "items":  {
+                                                                                                            "anyOf":  [
+                                                                                                                          {
+                                                                                                                              "type":  "string"
+                                                                                                                          },
+                                                                                                                          {
+                                                                                                                              "type":  "integer"
+                                                                                                                          }
+                                                                                                                      ]
+                                                                                                        },
+                                                                                              "type":  "array",
+                                                                                              "title":  "Location"
+                                                                                          },
+                                                                                  "msg":  {
+                                                                                              "type":  "string",
+                                                                                              "title":  "Message"
+                                                                                          },
+                                                                                  "type":  {
+                                                                                               "type":  "string",
+                                                                                               "title":  "Error Type"
+                                                                                           }
+                                                                              },
+                                                               "type":  "object",
+                                                               "required":  [
+                                                                                "loc",
+                                                                                "msg",
+                                                                                "type"
+                                                                            ],
+                                                               "title":  "ValidationError"
+                                                           }
+                                   }
+                   }
+}
