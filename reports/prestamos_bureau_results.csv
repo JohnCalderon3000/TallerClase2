@@ -1,0 +1,16 @@
+ID,Escenario,cliente_id,expected,status_code,outcome,error_message,timestamp
+1,Path feliz - cliente con buen historial,1001,HTTP 200; esquema BureauResponse; score alto; cliente apto,400,FAIL,"Unexpected status 400: {""detail"":""Cliente no encontrado""}",2025-12-02T14:42:06.319932
+2,Cliente con deudas activas,1002,HTTP 200; deudas_activas > 0; monto_deudas > 0,400,FAIL,"Unexpected status 400: {""detail"":""Cliente no encontrado""}",2025-12-02T14:42:08.731775
+3,Cliente en lista CIFIN (riesgo),1003,HTTP 200; mensaje de riesgo o campo 'puntualidad' pobre; revisar score,400,FAIL,"Unexpected status 400: {""detail"":""Cliente no encontrado""}",2025-12-02T14:42:10.801608
+4,Documento inválido - formato,ABC123,HTTP 422 o 400; Validation Error,422,PASS,,2025-12-02T14:42:12.833836
+5,Documento inexistente,999999,HTTP 200; tiene_historial=false; score=0 o respuesta vacía,400,FAIL,"Unexpected status 400: {""detail"":""Cliente no encontrado""}",2025-12-02T14:42:14.894492
+6,Cliente extranjero,70001,HTTP 200; comportamiento definido (sin historial o identificador internacional),400,FAIL,"Unexpected status 400: {""detail"":""Cliente no encontrado""}",2025-12-02T14:42:16.942751
+7,Documento duplicado,1004,HTTP 200 o 409 según política; respuesta consistente y audit trail,400,FAIL,"Unexpected status 400: {""detail"":""Cliente no encontrado""}",2025-12-02T14:42:18.986880
+8,Servicio caído - manejo error,1005,HTTP 503/500 manejado; mensaje amigable; no crash,400,FAIL,"Unexpected status 400: {""detail"":""Cliente no encontrado""}",2025-12-02T14:42:21.022452
+9,Timeout de 5s,1006,Cliente obtiene timeout controlado (429/504) o retry configurado,400,PASS,,2025-12-02T14:42:23.052869
+10,Respuesta inválida JSON,1007,HTTP 502/500; cliente valida esquema y reporta error,400,FAIL,"Unexpected status 400: {""detail"":""Cliente no encontrado""}",2025-12-02T14:42:25.075204
+11,Validación de campos obligatorios,(omitir),HTTP 422; HTTPValidationError,422,PASS,,2025-12-02T14:42:27.113222
+12,Cliente bloqueado por cumplimiento,1008,HTTP 403; código ACCOUNT_BLOCKED o similar,400,FAIL,"Unexpected status 400: {""detail"":""Cliente no encontrado""}",2025-12-02T14:42:29.141932
+13,Performance: carga sostenida 1000 req/min por 10 min,,Monitoreo p95 latency < 500ms; error rate <1%,422,FAIL,"Unexpected status 422: {""detail"":[{""type"":""missing"",""loc"":[""body"",""cliente_id""],""msg"":""Field required"",""input"":{""rate"":""1000/min""},""url"":""https://errors.pydantic.dev/2.4/v/missing""}]}",2025-12-02T14:42:31.188102
+14,Performance: spike 5000 req/min en 1 min,,Sistema mantiene disponibilidad o degrada graciosamente,422,PASS,,2025-12-02T14:42:33.216057
+15,Performance: recuperación tras fallo (chaos),,"Verificar reintentos, idempotencia, no pérdida de datos",422,PASS,,2025-12-02T14:42:35.275669
