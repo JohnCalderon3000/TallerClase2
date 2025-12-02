@@ -2,10 +2,6 @@
 
 This repository contains:
 
-- `test_data/transfers_cases.csv`: CSV with functional and performance test cases.
-- `tools/csv_to_xlsx.py`: small script to convert the CSV into an Excel `.xlsx` file.
-- `tests/test_transfers.py`: pytest tests that perform non-invasive discovery and optional functional tests against the API at `http://localhost:8000`.
-- `requirements.txt`: Python dependencies.
 
 Quick setup:
 
@@ -36,6 +32,22 @@ pytest tests\test_transfers.py -q
 ```
 
 Notes:
-- The functional tests try to discover the transfer endpoint from the service OpenAPI (`/openapi.json` or `/docs`). If discovery fails, tests are skipped.
-- Functional tests are disabled by default to avoid impacting real accounts. Enable them explicitly with `RUN_FUNCTIONAL=1`.
-- Performance tests are described in the CSV under `performance` tag and are NOT implemented as automated load tests here. Use tools like `locust` or `k6` to run the performance scenarios safely against a test environment.
+
+**Escenarios de Transacción**
+- **Path feliz:** transferencia exitosa dentro de límites diarios y sin requerir OTP.
+- **Exceder límite diario:** intentos que superan $50.000 diarios y deben ser rechazados.
+- **Exceder límite mensual:** intentos que superan $5.000.000 mensuales.
+- **Saldo insuficiente:** la cuenta origen no tiene fondos suficientes.
+- **OTP inválido/ausente:** montos > $1.000.000 requieren OTP; probar OTP inválido y OTP faltante.
+- **Mantenimiento:** intentos entre 01:00–03:00 deben devolver mantenimiento o encolamiento según política.
+- **Cuenta destino inválida:** número de cuenta inexistente o mal formado.
+- **Edge cases:** monto mínimo ($0.01), monto negativo, decimales > 2 posiciones.
+- **Concurrencia:** dos transferencias simultáneas que compiten por el mismo saldo.
+- **Validaciones de cuenta:** origen bloqueada, origen == destino.
+
+Los casos de prueba detallados están en `test_data/transfers_cases.csv` y en `test_data/transfers_cases2.csv`.
+
+**Reporte CSV de Transacciones**
+- Se añadió `reports/transfer_test_report.csv` con un resumen de los 15 casos funcionales y de concurrencia para revisión rápida.
+
+Si quieres que además convierta el reporte a Excel o que lo integre con una plantilla de pruebas (TestRail/JIRA), dime el formato objetivo y lo preparo.
