@@ -1,0 +1,16 @@
+ID,Escenario,Pre-condiciones,Pasos,Resultado Esperado,Prioridad,Datos de Prueba
+1,Path feliz - cliente con buen historial,Cliente con score alto y sin deudas activas,"POST /api/bureau/consultar {cliente_id} -> validar respuesta","HTTP 200; esquema BureauResponse; score alto; cliente apto","Alta","cliente_id=1001"
+2,Cliente con deudas activas,Cliente con deudas registradas,"POST /api/bureau/consultar {cliente_id}","HTTP 200; deudas_activas > 0; monto_deudas > 0","Alta","cliente_id=1002"
+3,Cliente en lista CIFIN (riesgo),Cliente reportado en CIFIN,"POST /api/bureau/consultar {cliente_id}","HTTP 200; mensaje de riesgo o campo 'puntualidad' pobre; revisar score","Alta","cliente_id=1003;report=CIFIN"
+4,Documento inválido - formato,Documento con formato incorrecto (letras en número),"POST /api/bureau/consultar {cliente_id inválido}","HTTP 422 o 400; Validation Error","Media","cliente_id=ABC123"
+5,Documento inexistente,Consulta por cliente no registrado,"POST /api/bureau/consultar {cliente_id}","HTTP 200; tiene_historial=false; score=0 o respuesta vacía","Media","cliente_id=999999"
+6,Cliente extranjero,Cliente con documento extranjero y sin historial nacional,"POST /api/bureau/consultar {cliente_id}","HTTP 200; comportamiento definido (sin historial o identificador internacional)","Baja","cliente_id=70001;pais=ARG"
+7,Documento duplicado,Dos registros con mismo documento en backend,"POST /api/bureau/consultar {cliente_id}","HTTP 200 o 409 según política; respuesta consistente y audit trail","Alta","cliente_id=1004;dup=true"
+8,Servicio caído - manejo error,Servicio de bureau simulado caído (500),"POST /api/bureau/consultar {cliente_id}","HTTP 503/500 manejado; mensaje amigable; no crash","Alta","cliente_id=1005;simulate=500"
+9,Timeout de 5s,Respuesta >5s configurada en mock,"POST /api/bureau/consultar {cliente_id}","Cliente obtiene timeout controlado (429/504) o retry configurado","Alta","cliente_id=1006;simulate_delay=6000"
+10,Respuesta inválida JSON,Mock que devuelve JSON malformado,"POST /api/bureau/consultar {cliente_id}","HTTP 502/500; cliente valida esquema y reporta error","Alta","cliente_id=1007;simulate_bad_json=true"
+11,Validación de campos obligatorios,Falta campo esperado en request,"POST /api/bureau/consultar {} (sin cliente_id)","HTTP 422; HTTPValidationError","Alta","cliente_id=(omitir)"
+12,Cliente bloqueado por cumplimiento,Cliente marcado como bloqueado por cumplimiento interno,"POST /api/bureau/consultar {cliente_id}","HTTP 403; código ACCOUNT_BLOCKED o similar","Alta","cliente_id=1008;blocked=true"
+13,Performance: carga sostenida 1000 req/min por 10 min,Sistema en entorno test,"Enviar requests concurrentes al endpoint durante 10 min","Monitoreo p95 latency < 500ms; error rate <1%","Alta","varias cliente_id;rate=1000/min",performance
+14,Performance: spike 5000 req/min en 1 min,Entorno test con autoscaling,"Generar spike y medir degradación","Sistema mantiene disponibilidad o degrada graciosamente","Alta","varias cliente_id;spike=5000",performance
+15,Performance: recuperación tras fallo (chaos),Entorno con replicas y cola,"Simular caída parcial y recuperación","Verificar reintentos, idempotencia, no pérdida de datos","Alta","varias cliente_id;chaos=true",performance
